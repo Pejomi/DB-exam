@@ -39,9 +39,7 @@ def clean_data(data):
     # Get all other columns as string columns, excluding the specified non-string columns
     string_columns = [col for col in cleaned_data.columns if col not in int_columns]
 
-    # Replace NaN and empty strings in string columns with 'Unknown'
-    cleaned_data[string_columns] = cleaned_data[string_columns].replace({None: 'No data', '': 'No data'})
+    # Replace NaN and empty strings
+    cleaned_data[string_columns] = cleaned_data[string_columns].replace({'Data missing or out of range': 'No data', '': 'No data'})
 
-    cleaned_data = cleaned_data.replace('Data missing or out of range', 'No data')
-
-    cleaned_data.to_csv('data/merged_information_clean.csv')
+    cleaned_data.to_csv('data/merged_information_clean.csv', encoding='utf-8')
