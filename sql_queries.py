@@ -1,9 +1,7 @@
 import pyodbc
 
 sql_files = [
-    'sql-files/create_accidents_table.sql',
-    'sql-files/create_drivers_table.sql',
-    'sql-files/create_vehicles_table.sql'
+    'sql-files/create_tables.sql'
 ]
 
 

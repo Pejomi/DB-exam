@@ -44,4 +44,4 @@ def clean_data(data):
 
     cleaned_data = cleaned_data.replace('Data missing or out of range', 'No data')
 
-    cleaned_data.to_csv('data/merged_information_clean.csv')
+    cleaned_data.to_csv('data/merged_information_clean.csv', encoding='utf-8')

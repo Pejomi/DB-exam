@@ -4,7 +4,7 @@ import pyodbc
 def get_db_conn():
     # Database connection parameters
     server = '.'
-    database = 'exam_schema_v1'
+    database = 'exam_schema_v3'
 
     # Connect to MSSQL database
     print("Connecting to database: {}...".format(database))
