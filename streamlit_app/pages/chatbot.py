@@ -4,6 +4,9 @@ import time
 import pymongo
 from pymongo import MongoClient
 from dotenv import load_dotenv
+import os
+
+
 load_dotenv()
 
 st.set_page_config(page_title="Chatbot", page_icon="🤖")
