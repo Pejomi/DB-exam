@@ -89,8 +89,8 @@ def get_unique_environment_conditions_for_insert(existing_environment_conditions
 
     new_environment_conditions = pd.DataFrame(data[['Light_Conditions', 'Weather_Conditions', 'Road_Type', 'Road_Surface_Conditions', 'Urban_or_Rural_Area', 'Speed_limit']])
     new_environment_conditions[['Light_Conditions', 'Weather_Conditions', 'Road_Type', 'Road_Surface_Conditions']].replace('', 'unknown', inplace=True)
-    new_environment_conditions['Speed_limit'] = new_environment_conditions['Speed_limit'].fillna(0).astype(float).astype(int)
     new_environment_conditions['Speed_limit'] = new_environment_conditions['Speed_limit'].replace('', 0).astype(float).astype(int)
+    new_environment_conditions['Speed_limit'] = new_environment_conditions['Speed_limit'].fillna(0).astype(float).astype(int)
 
     existing_area_types.rename(columns={'type': 'Urban_or_Rural_Area'}, inplace=True)
     matching_area_type = pd.merge(new_environment_conditions, existing_area_types, on='Urban_or_Rural_Area', how='inner')
@@ -194,8 +194,8 @@ def get_unique_accidents_for_insert(existing_accidents, existing_vehicles, exist
     new_accidents[['Sex_of_Driver', 'Age_Band_of_Driver', 'Driver_Home_Area_Type']].replace('', 'unknown', inplace=True)
 
     new_accidents[['Light_Conditions', 'Weather_Conditions', 'Road_Type', 'Road_Surface_Conditions']].replace('', 'unknown', inplace=True)
-    new_accidents['Speed_limit'] = new_accidents['Speed_limit'].fillna(0).astype(float).astype(int)
     new_accidents['Speed_limit'] = new_accidents['Speed_limit'].replace('', 0).astype(float).astype(int)
+    new_accidents['Speed_limit'] = new_accidents['Speed_limit'].fillna(0).astype(float).astype(int)
 
     new_accidents[['Hit_Object_in_Carriageway', 'Hit_Object_off_Carriageway', 'Vehicle_Manoeuvre', 'X1st_Point_of_Impact']] = new_accidents[['Hit_Object_in_Carriageway', 'Hit_Object_off_Carriageway', 'Vehicle_Manoeuvre', 'X1st_Point_of_Impact']].replace('', 'unknown')
 
@@ -203,17 +203,17 @@ def get_unique_accidents_for_insert(existing_accidents, existing_vehicles, exist
 
     existing_area_types.rename(columns={'type': 'Urban_or_Rural_Area'}, inplace=True)
     matching_area_type = pd.merge(new_accidents, existing_area_types, on='Urban_or_Rural_Area', how='inner')
-    area_type_id = matching_area_type['area_type_ID']
+    area_type_id = matching_area_type['area_type_ID'].astype(float).astype(int)
     new_accidents['environment_area_type_ID'] = area_type_id
 
     existing_area_types.rename(columns={'Urban_or_Rural_Area': 'Driver_Home_Area_Type'}, inplace=True)
     matching_area_type = pd.merge(new_accidents, existing_area_types, on='Driver_Home_Area_Type', how='inner')
-    area_type_id = matching_area_type['area_type_ID']
+    area_type_id = matching_area_type['area_type_ID'].astype(float).astype(int)
     new_accidents['home_area_type_ID'] = area_type_id
 
     existing_age_bands.rename(columns={'band': 'Age_Band_of_Driver'}, inplace=True)
     matching_age_band = pd.merge(new_accidents, existing_age_bands, on='Age_Band_of_Driver', how='inner')
-    age_band_id = matching_age_band['age_band_ID']
+    age_band_id = matching_age_band['age_band_ID'].astype(float).astype(int)
     new_accidents['age_band_ID'] = age_band_id
 
     ##############################
@@ -232,7 +232,7 @@ def get_unique_accidents_for_insert(existing_accidents, existing_vehicles, exist
                         how='left', indicator=True)
 
     # Keep only the rows that found a match
-    environtment_conditions_ids = merged[merged['_merge'] == 'both'].drop(columns=['_merge'])['environment_conditions_ID']
+    environtment_conditions_ids = merged[merged['_merge'] == 'both'].drop(columns=['_merge'])['environment_conditions_ID'].astype(float).astype(int)
 
     new_accidents['environment_conditions_ID'] = environtment_conditions_ids
 
@@ -248,7 +248,7 @@ def get_unique_accidents_for_insert(existing_accidents, existing_vehicles, exist
                         how='left', indicator=True)
 
     # Keep only the rows that found a match
-    driver_ids = merged[merged['_merge'] == 'both'].drop(columns=['_merge'])['driver_ID']
+    driver_ids = merged[merged['_merge'] == 'both'].drop(columns=['_merge'])['driver_ID'].astype(float).astype(int)
 
     new_accidents['driver_ID'] = driver_ids
 
@@ -267,7 +267,7 @@ def get_unique_accidents_for_insert(existing_accidents, existing_vehicles, exist
                       how='left', indicator=True)
 
     # Keep only the rows that found a match
-    vehicle_ids = merged[merged['_merge'] == 'both'].drop(columns=['_merge'])['vehicle_ID']
+    vehicle_ids = merged[merged['_merge'] == 'both'].drop(columns=['_merge'])['vehicle_ID'].astype(float).astype(int)
 
     new_accidents['vehicle_ID'] = vehicle_ids
 
@@ -286,7 +286,7 @@ def get_unique_accidents_for_insert(existing_accidents, existing_vehicles, exist
                       how='left', indicator=True)
 
     # Keep only the rows that found a match
-    collision_ids = merged[merged['_merge'] == 'both'].drop(columns=['_merge'])['collision_ID']
+    collision_ids = merged[merged['_merge'] == 'both'].drop(columns=['_merge'])['collision_ID'].astype(float).astype(int)
 
     new_accidents['collision_ID'] = collision_ids
 
@@ -294,7 +294,7 @@ def get_unique_accidents_for_insert(existing_accidents, existing_vehicles, exist
 
     existing_severities.rename(columns={'type': 'Accident_Severity'}, inplace=True)
     matching_severity = pd.merge(new_accidents, existing_severities, on='Accident_Severity', how='inner')
-    severity_id = matching_severity['severity_ID']
+    severity_id = matching_severity['severity_ID'].astype(float).astype(int)
     new_accidents['severity_ID'] = severity_id
 
     ##############################

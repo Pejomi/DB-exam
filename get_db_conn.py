@@ -14,7 +14,8 @@ def get_db_conn():
             Trusted_Connection='Yes',
             Driver='{ODBC Driver 17 for SQL Server}',
             Server=f'{server}',
-            Database=f'{database}'
+            Database=f'{database}',
+            CHARSET='UTF-8'
         )
         print("Successfully connected to database: {}".format(database))
         return cnxn
