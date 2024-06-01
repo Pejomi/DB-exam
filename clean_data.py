@@ -42,6 +42,8 @@ def clean_data(data):
     # Replace NaN and empty strings in string columns with 'Unknown'
     cleaned_data[string_columns] = cleaned_data[string_columns].replace({None: 'No data', '': 'No data'})
 
+    cleaned_data['Driver_Home_Area_Type'] = cleaned_data['Driver_Home_Area_Type'].replace('Urban area', 'Urban')
+
     cleaned_data = cleaned_data.replace('Data missing or out of range', 'No data')
 
     cleaned_data.to_csv('data/merged_information_clean.csv', encoding='utf-8')
