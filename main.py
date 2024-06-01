@@ -77,7 +77,7 @@ if __name__ == '__main__':
     # Load data
     print("Loading data...")
     start_lookup = time.time()
-    data = pd.read_csv('data/merged_information_clean.csv', nrows=1000, encoding='utf-8', na_filter=False)
+    data = pd.read_csv('data/merged_information_clean.csv', encoding='utf-8', na_filter=False)
 
     print("Loading existing lookup tables...")
     existing_age_bands = pd.read_sql("SELECT * FROM AgeBands", cnxn)
