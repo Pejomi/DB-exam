@@ -32,3 +32,8 @@ Non-functional requirements:
 
 ## Deployment
 
+
+## Run Streamlit
+`cd streamlit_app`
+`streamlit run app.py`
+
