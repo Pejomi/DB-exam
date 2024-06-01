@@ -14,60 +14,6 @@ cnxn = get_db_conn.get_db_conn()
 cursor = cnxn.cursor()
 
 
-def insert_lookup_get_id(table, primary_key, columns, values):
-    # Ensure columns and values are in list format for uniform processing
-    if isinstance(columns, str):
-        columns = [columns]
-        values = [values]
-
-    # Replace empty strings or NaN values with None
-    values = [None if v == '' or pd.isna(v) else v for v in values]
-
-    # Build the query components dynamically based on columns count
-    insert_columns = []  # Columns to include in the INSERT statement
-    query_placeholders = []  # Placeholders for values in the INSERT statement
-    where_clause_parts = []
-    insert_params = []  # Parameters for the INSERT and SELECT queries
-
-    for col, val in zip(columns, values):
-        if val is None:
-            where_clause_parts.append(f"{col} IS NULL")
-        else:
-            where_clause_parts.append(f"{col} = ?")
-            insert_columns.append(col)
-            query_placeholders.append('?')
-            insert_params.append(val)
-
-    where_clause = ' AND '.join(where_clause_parts)
-    insert_columns_str = ', '.join(insert_columns)
-    query_placeholders_str = ', '.join(query_placeholders)
-
-    # Check if the entry exists with the exact combination including handling NULLs properly
-    select_query = f"SELECT {primary_key} FROM {table} WHERE {where_clause}"
-    cursor.execute(select_query, tuple(insert_params))
-    result = cursor.fetchone()
-    if result:
-        return result[0]
-    else:
-        # Insert new entry if it does not exist
-        if insert_columns:  # Check if there are any columns to insert
-            insert_query = f"INSERT INTO {table} ({insert_columns_str}) VALUES ({query_placeholders_str})"
-            cursor.execute(insert_query, tuple(insert_params))
-            cnxn.commit()
-        return cursor.execute("SELECT @@IDENTITY").fetchval()
-
-
-def execute_lookup(data_df, row, table, primary_key, columns):
-    if isinstance(columns, str):
-        # Single column, apply directly
-        return data_df[row].apply(lambda x: insert_lookup_get_id(table, primary_key, columns, x))
-    else:
-        # Multiple columns, assume 'row' is a list of column names of equal length to 'columns'
-        return data_df[row].apply(
-            lambda row_values: insert_lookup_get_id(table, primary_key, columns, list(row_values)),
-            axis=1)
-
-
 if __name__ == '__main__':
     # data = pd.read_csv('data/merged_information.csv', encoding='ISO-8859-1')
     # clean_data.clean_data(data)
