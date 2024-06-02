@@ -4,6 +4,7 @@ from datetime import time
 from decimal import Decimal
 import main
 import utils
+import pyodbc
 
 
 def load_and_insert(csv_path, table_name, columns, preprocess=None):
@@ -39,15 +40,21 @@ def load_and_insert(csv_path, table_name, columns, preprocess=None):
 
         batch_data.append([row[col] for col in columns.values()])
         if len(batch_data) >= batch_size:
-            main.cursor.executemany(query, batch_data)
-            main.cnxn.commit()
-            batch_data = []
+            try:
+                main.cursor.executemany(query, batch_data)
+                main.cnxn.commit()
+                batch_data = []
+            except pyodbc.Error as e:
+                main.cnxn.rollback()
+                print("Error occurred, transaction rolled back:", e)
 
     if batch_data:
-        main.cursor.executemany(query, batch_data)
-        main.cnxn.commit()
-
-    main.cnxn.commit()
+        try:
+            main.cursor.executemany(query, batch_data)
+            main.cnxn.commit()
+        except pyodbc.Error as e:
+            main.cnxn.rollback()
+            print("Error occurred, transaction rolled back:", e)
 
 
 def insert_all_tables():
