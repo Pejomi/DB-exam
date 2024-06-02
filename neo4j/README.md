@@ -1,26 +1,36 @@
-from neo4j import GraphDatabase
+# All Nodes and relationships in the database
 
-class Neo4jConnection:
-    def __init__(self, uri, user, pwd):
-        self._driver = GraphDatabase.driver(uri, auth=(user, pwd))
+```
+[Accident] --HAS_SEVERITY--> [Severity]
+[Accident] --DATE_WAS--> [Date]
+[Accident] --HAS_SPEED_LIMIT--> [SpeedLimit]
+[Accident] --ROAD_TYPE_WAS--> [RoadType]
+[Accident] --WEATHER_WAS--> [Weather]
+[Accident] --LIGHT_WAS--> [Light]
+[Accident] --ROAD_SURFACE_WAS--> [RoadSurface]
+[Accident] --IMPACTED_FIRST--> [PointOfImpact]
+[Accident] --ACCIDENT_AREA_WAS--> [Area]
+[Accident] --VEHICLE_MANOEUVRE--> [Manoeuvre]
+[Accident] --INVOLVES--> [Vehicle]
+[Vehicle] --HAS_VEHICLE_TYPE--> [VehicleType]
+[Vehicle] --MADE_BY--> [Make]
+[Vehicle] --MODEL--> [Model]
+[Vehicle] --DRIVEN_BY--> [Driver]
+[Driver] --HAS_SEX--> [Sex]
+[Driver] --HAS_AGE_BAND--> [AgeBand]
+[Driver] --LIVES_IN--> [Area]
+```
 
-    def close(self):
-        self._driver.close()
+## Nodes & Relationships
+![alt text](img/nodes1.png)
 
-    def execute_query(self, query, parameters=None):
-        with self._driver.session() as session:
-            with session.begin_transaction() as tx:
-                tx.run(query, parameters)
-
-    def execute_read_query(self, query, parameters=None):
-        with self._driver.session() as session:
-            with session.begin_transaction() as tx:
-                result = tx.run(query, parameters)
-                return result.data()
+## Nodes & Relationships with properties
+![alt text](img/nodes2.png)
 
 
-    def create_indexes(self):
-        index_queries = [
+## Indexes
+Indexing is important in databases, including graph databases like Neo4j, because it improves query performance by allowing the database to quickly locate the rows or nodes that match certain criteria. Here are the ones we have created for our database:
+```
             # Accident node
             "CREATE CONSTRAINT FOR (accident:Accident) REQUIRE accident.index IS UNIQUE",
             "CREATE INDEX FOR (accident:Accident) ON (accident.latitude)",
@@ -80,9 +90,4 @@ class Neo4jConnection:
 
             # AgeBand node
             "CREATE INDEX FOR (ageBand:AgeBand) ON (ageBand.band)"
-        ]
-
-        with self._driver.session() as session:
-            for query in index_queries:
-                session.run(query)
-                print(f"Index created: {query}")
+```

@@ -1,5 +1,4 @@
 import time
-import pandas as pd
 from neo4j_connector import Neo4jConnection
 from data_loader import load_data
 from node_creator import create_nodes
@@ -38,15 +37,27 @@ def get_all_node_types():
     conn = Neo4jConnection(URI, USERNAME, PASSWORD)
     
     try:
-
-        query = """
-        CALL db.labels()
+        query_nodes = """
+        CALL db.labels() YIELD label
+        RETURN label
         """
 
-        result = conn.execute_read_query(query)
-        print("List of all node types:")
-        for record in result:
-            print(record['label'])
+        query_relationships = """
+        CALL db.relationshipTypes() YIELD relationshipType
+        RETURN relationshipType
+        """
+
+        node_labels = conn.execute_read_query(query_nodes)
+        relationships = conn.execute_read_query(query_relationships)
+
+        
+        print("\nNode Labels:")
+        for label in node_labels:
+            print(f"- {label}")
+
+        print("\nRelationships:")
+        for relationship in relationships:
+            print(f"- {relationship}")
 
     finally:
         conn.close()
@@ -60,7 +71,6 @@ def run_query(query):
         for record in result:
             print(f"# {index}:")
             index += 1
-            #print('Accident:', record['accident'], 'Age of vehicle: ', record['vehicle']['age'], 'Car Make: ', record['make']['name'])
             print(record)
     finally:
         conn.close()
