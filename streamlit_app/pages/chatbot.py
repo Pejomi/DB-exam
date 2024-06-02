@@ -136,12 +136,12 @@ else:
             # Display chat statistics
             col1, col2, col3, col4 = st.columns(4)
             with col1:
-                st.metric(label="Users", value=len(all_user_chats))
+                st.metric(label="Total Users", value=len(all_user_chats))
             with col2:
-                st.metric(label="Chats", value=sum([len(chat["titles"]) for chat in all_user_chats]))
+                st.metric(label="Total Chats", value=sum([len(chat["titles"]) for chat in all_user_chats]))
             with col3:
                 sum_of_messages = sum([sum([len(message) for message in chat["messages"]]) for chat in all_user_chats])
-                st.metric(label="Messages", value=sum_of_messages)
+                st.metric(label="Total Messages", value=sum_of_messages)
             with col4:
                 avg_messages_in_one_chat = round(sum([sum([len(message) for message in chat["messages"]]) for chat in all_user_chats]) / sum([len(chat["messages"]) for chat in all_user_chats]))
                 st.metric(label="Avg messages in a chat", value=avg_messages_in_one_chat)
@@ -194,7 +194,6 @@ else:
             first_message = "Hello! How can I help you today?"
             if "assistant" not in [message["role"] for message in messages]:
                 messages.append({"role": "assistant", "content": first_message})
-            #messages.append({"role": "assistant", "content": first_message})
             
             # Display chat messages
             for message in messages:

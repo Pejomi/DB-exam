@@ -3,42 +3,228 @@ import pandas as pd
 import numpy as np
 import datetime
 import time
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join('..')))
+from get_db_conn import get_db_conn
+
+# error handling for all queries, only fetch once refetch when something changes, choose all from start
 st.set_page_config(page_title="Relational DB", page_icon="../img/logo.png")
 
 tab1, tab2, tab3 = st.tabs(["Search", "Analyze", "🔥Adminstrator"])
 
+def get_severitiy_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_severities] BEGIN TRY SELECT DISTINCT type FROM dbo.Severities ORDER BY type ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_severities] END CATCH", cnxn)
+    return result["type"].tolist()
+
+def get_max_casualties():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_max_casualties] BEGIN TRY SELECT MAX(number_of_casualties) AS max_casualties FROM dbo.Accidents END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_max_casualties] END CATCH", cnxn)
+    return result["max_casualties"].tolist()
+
+def get_max_and_min_dates():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_max_and_min_dates] BEGIN TRY SELECT MIN(date) AS min_date, MAX(date) AS max_date FROM dbo.Accidents END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_max_and_min_dates] END CATCH", cnxn)
+    return result
+
+def get_hit_object_in_carriage_way_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_hit_object_in_carriage_way] BEGIN TRY SELECT DISTINCT hit_object_in_carriageway FROM dbo.Collisions ORDER BY hit_object_in_carriageway ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_hit_object_in_carriage_way] END CATCH", cnxn)
+    return result["hit_object_in_carriageway"].tolist()
+
+def get_hit_object_off_carriage_way_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_hit_object_off_carriage_way] BEGIN TRY SELECT DISTINCT hit_object_off_carriageway FROM dbo.Collisions ORDER BY hit_object_off_carriageway ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_hit_object_off_carriage_way] END CATCH", cnxn)
+    return result["hit_object_off_carriageway"].tolist()
+
+def get_vehicle_manoeuvre_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_vehicle_manoeuvre] BEGIN TRY SELECT DISTINCT vehicle_manoeuvre FROM dbo.Collisions ORDER BY vehicle_manoeuvre ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_vehicle_manoeuvre] END CATCH", cnxn)
+    return result["vehicle_manoeuvre"].tolist()
+
+def get_point_of_impact_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_point_of_impact] BEGIN TRY SELECT DISTINCT point_of_impact FROM dbo.Collisions ORDER BY point_of_impact ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_point_of_impact] END CATCH", cnxn)
+    return result["point_of_impact"].tolist()
+
+def get_sex_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_sex] BEGIN TRY SELECT DISTINCT sex FROM dbo.Drivers ORDER by sex ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_sex] END CATCH", cnxn)
+    return result["sex"].tolist()
+
+def get_age_bands_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_age_bands] BEGIN TRY SELECT DISTINCT band FROM dbo.AgeBands ORDER BY band ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_age_bands] END CATCH", cnxn)
+    return result["band"].tolist()
+
+def get_area_types_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_area_types] BEGIN TRY SELECT DISTINCT type FROM dbo.AreaTypes ORDER BY type ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_area_types] END CATCH", cnxn)
+    return result["type"].tolist()
+
+def get_vehicle_make_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_vehicle_make] BEGIN TRY SELECT DISTINCT make FROM dbo.Vehicles ORDER BY make ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_vehicle_make] END CATCH", cnxn)
+    return result["make"].tolist()
+
+def get_vehicle_model_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_vehicle_model] BEGIN TRY SELECT DISTINCT model FROM dbo.Vehicles ORDER BY model ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_vehicle_model] END CATCH", cnxn)
+    return result["model"].tolist()
+
+def get_vehicle_type_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_vehicle_type] BEGIN TRY SELECT DISTINCT type FROM dbo.Vehicles ORDER BY type ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_vehicle_type] END CATCH", cnxn)
+    return result["type"].tolist()
+
+def get_vehicle_model_year_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_vehicle_model_year] BEGIN TRY SELECT DISTINCT model_year FROM dbo.Vehicles ORDER BY model_year ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_vehicle_model_year] END CATCH", cnxn)
+    return result["model_year"].tolist()
+
+def get_weather_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_weather] BEGIN TRY SELECT DISTINCT weather FROM dbo.EnvironmentConditions ORDER BY weather ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_weather] END CATCH", cnxn)
+    return result["weather"].tolist()
+
+def get_road_type_options():    
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_road_type] BEGIN TRY SELECT DISTINCT road_type FROM dbo.EnvironmentConditions ORDER BY road_type ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_road_type] END CATCH", cnxn)
+    return result["road_type"].tolist()
+
+def get_speed_limit_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_speed_limit] BEGIN TRY SELECT DISTINCT speed_limit FROM dbo.EnvironmentConditions ORDER BY speed_limit ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_speed_limit] END CATCH", cnxn)
+    return result["speed_limit"].tolist()
+
+def get_light_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_light] BEGIN TRY SELECT DISTINCT light FROM dbo.EnvironmentConditions ORDER BY light ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_light] END CATCH", cnxn)
+    return result["light"].tolist()
+
+def get_road_surface_options():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_road_surface] BEGIN TRY SELECT DISTINCT road_surface FROM dbo.EnvironmentConditions ORDER BY road_surface ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_road_surface] END CATCH", cnxn)
+    return result["road_surface"].tolist()
+
+def count_rows():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [count_rows] BEGIN TRY SELECT COUNT(*) AS count FROM dbo.ViewAll END TRY BEGIN CATCH ROLLBACK TRANSACTION [count_rows] END CATCH", cnxn)
+    return result["count"].tolist()
+
+def get_all_columns():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_all_columns] BEGIN TRY SELECT TOP(1) * FROM dbo.ViewAll END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_all_columns] END CATCH", cnxn)
+    return result.columns.tolist()
+
+def get_all_data():
+    cnxn = get_db_conn()
+    cursor = cnxn.cursor()
+    result = pd.read_sql("BEGIN TRANSACTION [get_all_data] BEGIN TRY SELECT * FROM dbo.ViewAll END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_all_data] END CATCH", cnxn)
+    return result
+
 def search():
-    # make a query to the database with transaction
+    # make a query to the database with transaction  
+    query = "SELECT "
+    data = st.session_state.selected_options
+    fields = ", ".join(data["columns"]) if len(data["columns"]) > 0 else "*"
+    #order = "WITH a AS (SELECT *, ROW_NUMBER() OVER (ORDER BY date) AS row_num FROM dbo.ViewAll) SELECT * FROM a "
+    where_clause = []
+    values = []
+    for key, value in data.items():
+        if key == "dates":
+            where_clause.append("date BETWEEN ? AND ?")
+            values.append(value[0])
+            values.append(value[1])
+        
+        if type(value) == list and len(value) > 0:
+            if key == "casualties":
+                where_clause.append("number_of_casualties BETWEEN ? AND ?")
+                values.append(value[0])
+                values.append(value[1]) 
+            elif key == "rows":
+                #where_clause.append("a.row_num BETWEEN ? AND ?")
+                #values.append(value[0])
+                #values.append(value[1])
+                pass
+            elif key == "columns":
+                pass
+            else:
+                where_clause.append(str(key) + " IN (%s)" % (', '.join('?' for i in range(len(value)))))
+                for v in value:
+                    values.append(v)
+            
+    query = f"SELECT {fields} FROM dbo.ViewAll"
+    query = query + " WHERE " + " AND ".join(where_clause) if len(where_clause) > 0 else query
+    transaction = "BEGIN TRANSACTION [search] BEGIN TRY " + query + " END TRY BEGIN CATCH ROLLBACK TRANSACTION [search] END CATCH"
 
-    accident_severity = "severity IN (?) AND number_of_casualties BETWEEN ? AND ? AND timestamp BETWEEN ? AND ?"
-    driver = "sex IN (?) AND home_area_type = ? AND age_bands IN (?)"
-    vehicle = "vehicle_type IN (?) AND vehicle_make IN (?)"
-    environment_conditions = "weather IN (?) AND road_type IN (?) AND speed_limit IN (?) AND light IN (?) AND road_surface IN (?) AND area_type IN (?)"
+    try:
+        start_time= time.time()
+        cnxn = get_db_conn()
+        cursor = cnxn.cursor()
+        result = pd.read_sql(query, cnxn, params=(tuple(values)))
+        end_time = time.time()
+        execution_time = round(end_time - start_time)
 
-    query = "SELECT * FROM accidents WHERE " + accident_severity + " AND " + driver + " AND " + vehicle + " AND " + environment_conditions + " LIMIT ?, ?"
-    # query = "SELECT * FROM accidents WHERE severity IN (?) AND number_of_casualties BETWEEN ? AND ? AND timestamp BETWEEN ? AND ? AND sex IN (?) AND home_area_type = ? AND age_bands IN (?) AND vehicle_type IN (?) AND vehicle_make IN (?) AND weather IN (?) AND road_type IN (?) AND speed_limit IN (?) AND light IN (?) AND road_surface IN (?) AND area_type IN (?) LIMIT ?, ?"
-    transaction = "BEGIN TRANSACTION [search] BEGIN TRY " + query + " END TRY BEGIN CATCH ROLLBACK TRANSACTION [search] END CATCH END TRANSACTION [search]"    
-    
-    start_time = time.time()
-    #result = execute_query(transaction)
-    end_time = time.time()
-    execution_time = end_time - start_time
-    row_count = 1 # len(result)
-    #if result is not None:
-    with st.expander("✅ Result (" + str(row_count) + ")" , expanded=True):
-        st.write("Executed in: " + str(execution_time) + "s")
-        df = pd.DataFrame(np.random.randn(50, 20), columns=("col %d" % i for i in range(20)))
-        st.dataframe(df)
-    # else:
-    st.error("No result found. Please refine your search criteria.")
+        if result.shape[0] == 0:
+            st.info("No result found. Please refine your search criteria.")
+        else:
+            with st.expander("✅ Result (" + str(result.shape[0]) + " rows", expanded=True):
+                st.write("Executed in: " + str(execution_time) + "s")
+                st.dataframe(result)
+    except:
+        st.error("An error occurred while fetching the data. Please try again.")
 
-with tab1: # Search tab
-    today = datetime.datetime.now()
-    next_year = today.year + 1
-    jan_1 = datetime.date(next_year, 1, 1)
-    dec_31 = datetime.date(next_year, 12, 31)
+if "selected_options" not in st.session_state:
+    st.session_state.selected_options = {
+        "severity_type": [],
+        "casualties": [0, get_max_casualties()[0]],
+        "dates": (get_max_and_min_dates()["min_date"][0], get_max_and_min_dates()["max_date"][0]),
+        "hit_object_in_carriageway": [],
+        "hit_object_off_carriageway": [],
+        "vehicle_manoeuvre": [],
+        "point_of_impact": [],
+        "sex": [],
+        "home_area_type": [],
+        "bands": [],
+        "make": [],
+        "model": [],
+        "vehicle_type": [],
+        "model_year": [],
+        "weather": [],
+        "road_type": [],
+        "speed_limit": [],
+        "light": [],
+        "road_surface": [],
+        "area_type": [],
+        "columns": get_all_columns(),
+        "rows": [0, count_rows()[0]],
+    }
+
+with tab1: # Search tab   
     st.info("Search for data about traffical accidents in UK using our **relational database**.")
-    
     search_form = st.form(key="search_form")
     with search_form:
         st.write("Select the search criteria below:")
@@ -47,86 +233,137 @@ with tab1: # Search tab
             with col1:
                 severity_selected = st.multiselect(
                     "Severity:",
-                    ["Male", "Female", "Both", "Unknown"],
+                    get_severitiy_options()
                 )
             with col2:
-                start_casualities_selected, end_casualities_selected = st.select_slider(
+                start_casualties_selected, end_casualties_selected = st.select_slider(
                     "Number of Casualties:",
-                    options=[i for i in range(0, 101)],
-                    value=(0, 100))
-            timestamp_selected = st.date_input(
-                "Select timestamp:",
-                (jan_1, datetime.date(next_year, 1, 7)),
-                jan_1,
-                dec_31,
+                    options=[i for i in range(0, get_max_casualties()[0] + 1)],
+                    value=(0, get_max_casualties()[0]))
+            dates_selected = st.date_input(
+                "Select dates:",
+                (get_max_and_min_dates()["min_date"][0], get_max_and_min_dates()["max_date"][0]),
+                get_max_and_min_dates()["min_date"][0],
+                get_max_and_min_dates()["max_date"][0],
                 format="MM.DD.YYYY",
             )
+        with st.expander("Collisions"):
+            col1, col2 = st.columns(2)
+            with col1:
+                hit_object_in_selected = st.multiselect(
+                    "Hit object in carriage way:",
+                    get_hit_object_in_carriage_way_options()
+                )
+                vehicle_manoevre_selected = st.multiselect(
+                    "Vehicle manoeuvre:",
+                    get_vehicle_manoeuvre_options()
+                )
+            with col2:
+                hit_object_off_selected = st.multiselect(
+                    "Hit object off carriage way:",
+                    get_hit_object_off_carriage_way_options()
+                )
+                point_of_impact_selected = st.multiselect(
+                    "Point of impact:",
+                    get_point_of_impact_options()
+                )
         with st.expander("Drivers involved in accidents"):
             col1, col2 = st.columns(2)
             with col1:
                 sex_selected = st.multiselect(
                     "Sex:",
-                    ["Male", "Female", "Both", "Unknown"],
+                    get_sex_options()
                 )
             with col2:
-                home_area_type_selected = st.selectbox(
+                home_area_type_selected = st.multiselect(
                     "Home area type:",
-                    ["Urban", "Rural", "Unknown"],
+                    get_area_types_options()
                 )
-            age_bands_selected = st.multiselect("Age bands:",("Male", "Female", "Both"))               
+            age_bands_selected = st.multiselect("Age bands:", get_age_bands_options())               
         with st.expander("Vehicles involved in accidents"):  
             col1, col2 = st.columns(2)
             with col1:
-                vehicle_type_selected = st.multiselect(
-                    "Vehicle type:",
-                    ["Car", "Van", "Lorry", "Motorcycle", "Bicycle", "Other", "Unknown"],
+                vehicle_make_selected = st.multiselect(
+                    "Make:",
+                    get_vehicle_make_options()
+                )
+                vehicle_model_selected = st.multiselect(
+                    "Model:",
+                    get_vehicle_model_options()
                 )
             with col2:
-                vehicle_make_selected = st.multiselect(
-                    "Vehicle make:",
-                    ["Ford", "Vauxhall", "Volkswagen", "BMW", "Peugeot", "Toyota", "Mercedes", "Audi", "Renault", "Other", "Unknown"],
+                vehicle_type_selected = st.multiselect(
+                    "Vehicle type:",
+                    get_vehicle_type_options()
+                )
+                vehicle_model_year_selected = st.multiselect(
+                    "Model year:",
+                    get_vehicle_model_year_options()
                 )
         with st.expander("Environment conditions"):
             col1, col2 = st.columns(2)
             with col1:
                 weather_selected = st.multiselect(
                     "Weather:",
-                    ["Fine no high winds", "Raining no high winds", "Snowing no high winds", "Fine + high winds", "Raining + high winds", "Snowing + high winds", "Fog or mist", "Other", "Unknown"],
+                    get_weather_options()
                 )
                 road_type_selected = st.multiselect(
                     "Road type:",
-                    ["Roundabout", "One way street", "Dual carriageway", "Single carriageway", "Slip road", "Unknown", "Other"],
+                    get_road_type_options()
                 )
                 speed_limit_selected = st.multiselect(
                     "Speed limit:",
-                    ["20", "30", "40", "50", "60", "70", "Other", "Unknown"],
+                    get_speed_limit_options()
                 )
             with col2:
                 light_selected = st.multiselect(
                     "Light:",
-                    ["Daylight", "Darkness - lights lit", "Darkness - lights unlit", "Darkness - no lighting", "Darkness - lighting unknown", "Other", "Unknown"],
+                    get_light_options()
                 )
                 road_surface_selected = st.multiselect(
                     "Road surface:",
-                    ["Dry", "Wet or damp", "Snow", "Frost or ice", "Flood over 3cm. deep", "Oil or diesel", "Mud", "Other", "Unknown"],
+                    get_road_surface_options()
                 )
                 area_type_selected = st.multiselect(
                     "Area type:",
-                    ["Urban", "Rural", "Unknown"],
+                    get_area_types_options()
                 )
         st.write("Select the data to be displayed:")
         with st.expander("Data rows and columns"):       
             start_row_selected, end_row_selected = st.select_slider(
                 "Select a range of rows:",
-                options=[i for i in range(0, 1201)],
-                value=(0, 1200))
+                options=[i for i in range(0, count_rows()[0] + 1)],
+                value=(0, count_rows()[0]))
             columns_selected = st.multiselect(
                 "Choose columns:",
-                ["driver", "age", "location"]
-            )
+                get_all_columns()
+            )        
+        st.session_state.selected_options = {
+            "severity_type": severity_selected,
+            "casualties": [start_casualties_selected, end_casualties_selected],
+            "dates": dates_selected,
+            "hit_object_in_carriageway": hit_object_in_selected,
+            "hit_object_off_carriageway": hit_object_off_selected,
+            "vehicle_manoeuvre": vehicle_manoevre_selected,
+            "point_of_impact": point_of_impact_selected,
+            "sex": sex_selected,
+            "home_area_type": home_area_type_selected,
+            "bands": age_bands_selected,
+            "make": vehicle_make_selected,
+            "model": vehicle_model_selected,
+            "vehicle_type": vehicle_type_selected,
+            "model_year": vehicle_model_year_selected,
+            "weather": weather_selected,
+            "road_type": road_type_selected,
+            "speed_limit": speed_limit_selected,
+            "light": light_selected,
+            "road_surface": road_surface_selected,
+            "area_type": area_type_selected,
+            "columns": columns_selected,
+            "rows": [start_row_selected, end_row_selected],
+        }
         submit = search_form.form_submit_button("Search", type="primary")
     if submit:
-        st.write("Search results:")
         search()
 
 with tab2: # Analyze tab
@@ -144,46 +381,13 @@ with tab2: # Analyze tab
         st.map(df, size=2, use_container_width=False)
 
 with tab3: # Monitoring tab
-    st.write("Monitoring")
-
-
-
-
-
-
-
-
-
-
-
-    #st.write("Home")
-    #with st.expander("Table"):
-    #    df = pd.DataFrame(np.random.randn(50, 20), columns=("col %d" % i for i in range(20)))
-    #    st.dataframe(df)
-
-    #options = st.multiselect(
-    #    "Select values:",
-    #    ["Green", "Yellow", "Red", "Blue"],
-    #)
-
-    #option = st.selectbox("Choose a method:",("Create", "Read", "Update", "Delete"), index=None, placeholder="Select contact method...",)
-
-    #st.button("Reset", type="primary")
-    #st.button("Say hello")
-
-    #today = datetime.datetime.now()
-    #next_year = today.year + 1
-    #jan_1 = datetime.date(next_year, 1, 1)
-    #dec_31 = datetime.date(next_year, 12, 31)
-
-    #d = st.date_input(
-    #    "Select your vacation for next year",
-    #    (jan_1, datetime.date(next_year, 1, 7)),
-    #    jan_1,
-    #    dec_31,
-    #    format="MM.DD.YYYY",
-    #)
-    #d
-
-
-
+    # Display chat statistics
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric(label="Severities", value=len(get_severitiy_options()))
+    with col2:
+        st.metric(label="Total Chats", value=10)
+    with col3:
+        st.metric(label="Total Messages", value=10)
+    with col4:
+        st.metric(label="Avg messages in a chat", value=10)
