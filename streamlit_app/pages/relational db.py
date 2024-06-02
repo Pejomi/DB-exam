@@ -191,7 +191,7 @@ def search():
         if result.shape[0] == 0:
             st.info("No result found. Please refine your search criteria.")
         else:
-            with st.expander("✅ Result (" + str(result.shape[0]) + " rows", expanded=True):
+            with st.expander("✅ Result (" + str(result.shape[0]) + " rows)", expanded=True):
                 st.write("Executed in: " + str(execution_time) + "s")
                 st.dataframe(result)
     except:
