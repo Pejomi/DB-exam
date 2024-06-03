@@ -94,7 +94,6 @@ The user can also access their own chat history with the chatbot and admin can a
 Some features such as proper response from chatbot and machine learning model are not implemented yet. These features will be implemented in the future.
 
 ## Setup project
-
 ### Download datasets
 Download the datasets from the link below and place them in a folder called "data" in the root of the project.
 
@@ -102,7 +101,9 @@ Download the datasets from the link below and place them in a folder called "dat
 The data set contains information about car accidents in the UK. The data set is used to populate the relational database and the graph database. [Link to the data set](https://www.kaggle.com/datasets/tsiaras/uk-road-safety-accidents-and-vehicles?select=Accident_Information.csv)
 
 
-### Clean data
+### Clean and save data
+Make a folder called "table-csv" inside the "data" folder. It will be used to store the cleaned data from the traffic accident data set.
+
 In the main.py file you will have to out comment the line 19-21: 
 
 ```python
@@ -110,8 +111,8 @@ merge_data.merge_data()
 data = pd.read_csv('data/merged_information.csv', encoding='ISO-8859-1')
 clean_data.clean_data(data)
 ```
-    
-Then run the main.py file only **ONCE** to clean the data. After the data is cleaned you can uncomment the lines 19-21 and run the main.py file again to populate the databases. (If you haven't already setup your MSSQL database you have to do that first before running the main.py file again.)
+
+Then run the main.py file only **ONCE** to clean the data. (If you haven't already setup your MSSQL database you have to do that first before running the main.py file.)
     
 ```python
 python main.py
