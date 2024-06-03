@@ -112,7 +112,7 @@ data = pd.read_csv('data/merged_information.csv', encoding='ISO-8859-1')
 clean_data.clean_data(data)
 ```
 
-Then run the main.py file only **ONCE** to clean the data. (If you haven't already setup your MSSQL database you have to do that first before running the main.py file.)
+Then run the main.py file only **ONCE** to clean the data then remember to comment out the lines again before running the main.py file again in the future. (If you haven't already setup your MSSQL database you have to do that first before running the main.py file.)
     
 ```python
 python main.py
@@ -148,6 +148,12 @@ When the data is populated in the MSSQL database, you have to create a view call
 
 #### Neo4j
 To setup the Neo4j database you will need to create a database with your desired name in your local Neo4j server. Make sure to have the Neo4j server running when you run the application.
+
+Run the main.py file inside the "neo4j" folder to populate the Neo4j database with the traffic accident data set.
+    
+```python
+python main.py
+```
 
 ## Run streamlit app
 To run the streamlit app, you need to have streamlit installed. If you don't have streamlit installed, you can install it by running the following command:
