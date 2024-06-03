@@ -144,6 +144,8 @@ Run the main.py file to populate the MSSQL database with the traffic accident da
 python main.py
 ```
 
+When the data is populated in the MSSQL database, you have to create a view called "ViewAll" in the database. Copy the sql-script from the file "ViewAll.sql" in the "sql-files" folder.
+
 #### Neo4j
 To setup the Neo4j database you will need to create a database with your desired name in your local Neo4j server. Make sure to have the Neo4j server running when you run the application.
 
