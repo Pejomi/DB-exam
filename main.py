@@ -15,6 +15,8 @@ cursor = cnxn.cursor()
 
 
 if __name__ == '__main__':
+    # RUN THIS ONCE TO CREATE THE CLEANED DATA FILES
+    # merge_data.merge_data()
     # data = pd.read_csv('data/merged_information.csv', encoding='ISO-8859-1')
     # clean_data.clean_data(data)
 
