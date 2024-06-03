@@ -35,9 +35,6 @@ def load_and_insert(csv_path, table_name, columns, preprocess=None):
     for index, row in data.iterrows():
         print(f"Inserting row {index + 1} into {table_name}...")
 
-        # Print the full query for debugging
-        print(query, [row[col] for col in columns.values()])
-
         batch_data.append([row[col] for col in columns.values()])
         if len(batch_data) >= batch_size:
             try:
