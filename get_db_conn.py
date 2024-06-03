@@ -1,9 +1,14 @@
 import pyodbc
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 
 
 def get_db_conn():
     # Database connection parameters
-    server = '.'
+    server = os.getenv("MSSQL_SERVER")
     database = 'exam_schema_v3'
 
     # Connect to MSSQL database
