@@ -80,11 +80,6 @@ Below is a diagram of the relational database design:
 ### Graph database
 The graph database is implemented using Neo4j. The database is designed to store the relationships between the different entities in the traffic accident data set.
 
-## Traffic accident in UK data set
-The data set contains information about car accidents in the UK. The data set is used to populate the relational database and the graph database.
-
-[Link to the data set](https://www.kaggle.com/datasets/tsiaras/uk-road-safety-accidents-and-vehicles?select=Accident_Information.csv)
-
 ## Current status
 The focus has been on the database design and the implementation of the three database types: Document, Relational and Graph database. 
 
@@ -98,16 +93,75 @@ The user can also access their own chat history with the chatbot and admin can a
 
 Some features such as proper response from chatbot and machine learning model are not implemented yet. These features will be implemented in the future.
 
+## Setup project
+
+### Download datasets
+Download the datasets from the link below and place them in a folder called "data" in the root of the project.
+
+#### Traffic accident in UK data set
+The data set contains information about car accidents in the UK. The data set is used to populate the relational database and the graph database. [Link to the data set](https://www.kaggle.com/datasets/tsiaras/uk-road-safety-accidents-and-vehicles?select=Accident_Information.csv)
+
+
+### Clean data
+In the main.py file you will have to out comment the line 19-21: 
+
+```python
+merge_data.merge_data()
+data = pd.read_csv('data/merged_information.csv', encoding='ISO-8859-1')
+clean_data.clean_data(data)
+```
+    
+Then run the main.py file only **ONCE** to clean the data. After the data is cleaned you can uncomment the lines 19-21 and run the main.py file again to populate the databases. (If you haven't already setup your MSSQL database you have to do that first before running the main.py file again.)
+    
+```python
+python main.py
+```
+
+### Setup databases
+
+#### MongoDB
+To setup the MongoDB database you will need to create a database called "chatbot" and a collection called "messages" either on your local machine or on MongoDB Atlas.
+
+Then create a .env file in the root of the project and add the variable "MONGODB" with your connection string to the file as shown below:
+
+```env
+MONGODB="your_mongodb_connection_string"
+```
+
+#### MSSQL
+To setup the MSSQL database you will need to create a database called "exam_schema_v3" in your local MSSQL server.
+
+In your .env file add the variable "MSSQL_SERVER" with your server name as shown below:
+
+```env
+MSSQL_SERVER="server_name"
+```
+
+Run the main.py file to populate the MSSQL database with the traffic accident data set.
+    
+```python
+python main.py
+```
+
+#### Neo4j
+To setup the Neo4j database you will need to create a database with your desired name in your local Neo4j server. Make sure to have the Neo4j server running when you run the application.
+
 ## Run streamlit app
 To run the streamlit app, you need to have streamlit installed. If you don't have streamlit installed, you can install it by running the following command:
 
-```pip install streamlit```
+```bash
+pip install streamlit
+```
 
 After installing streamlit, you can run the streamlit app by running the following commands:
 
-```cd streamlit_app ```
+```bash
+cd streamlit_app 
+```
 
-```streamlit run app.py```
+```bash
+streamlit run app.py
+```
 
 ## Technologies
 The following technologies have been used in the project:
