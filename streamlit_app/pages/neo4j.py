@@ -5,6 +5,12 @@ import datetime
 import time
 from neo4j import GraphDatabase
 
+uri = "bolt://localhost:7687"
+user = "neo4j"
+password = "password"
+driver = GraphDatabase.driver(uri, auth=(user, password))
+
+
 st.set_page_config(page_title="Graph DB", page_icon="../img/logo.png")
 
 if 'results' not in st.session_state:
@@ -58,7 +64,6 @@ def search(tx, params):
     if 'area_types' in params and params['area_types']:
         query += "AND accidentArea.area IN $area_types "
 
-    # Return statement
     query += """
     RETURN accident, severity, date, speedLimit, roadType, weather, light, roadSurface, accidentArea, vehicle, vehicleType, make, driver, sex, ageBand, driverArea
     SKIP $skip LIMIT $limit
@@ -67,22 +72,27 @@ def search(tx, params):
     return result.data()
 
 def execute_query(params):
-    uri = "bolt://localhost:7687"
-    user = "neo4j"
-    password = "password"
-    driver = GraphDatabase.driver(uri, auth=(user, password))
-
     with driver.session() as session:
         result = session.execute_read(search, params)
-    
-    driver.close()
     return result
 
+
+def find_earliest_and_latest_date():
+    query = """
+    MATCH (d:Date)
+    RETURN MIN(d.date) AS earliest_date, MAX(d.date) AS latest_date
+    """
+
+    with driver.session() as session:
+        result = session.run(query)
+        record = result.single()
+
+        earliest_date = record["earliest_date"]
+        latest_date = record["latest_date"]
+    return earliest_date, latest_date
+
+
 with tab1: # Search tab
-    today = datetime.datetime.now()
-    next_year = today.year - 10
-    jan_1 = datetime.date(next_year, 1, 1)
-    dec_31 = datetime.date(next_year, 12, 31)
     st.info("Search for data about traffic accidents in UK using our **graph database**.")
     
     search_form = st.form(key="search_form")
@@ -100,11 +110,17 @@ with tab1: # Search tab
                     "Number of Casualties:",
                     options=[i for i in range(0, 101)],
                     value=(0, 100))
+                
+            dates = find_earliest_and_latest_date(),
+            earliest_date = datetime.datetime.strptime(dates[0][0], "%Y-%m-%d")
+            latest_date = datetime.datetime.strptime(dates[0][1], "%Y-%m-%d")
+
             timestamp_selected = st.date_input(
+                
                 "Select timestamp:",
-                (jan_1, datetime.date(next_year, 1, 7)),
-                jan_1,
-                dec_31,
+                (earliest_date, latest_date),
+                earliest_date,
+                latest_date,
                 format="MM.DD.YYYY",
             )
         with st.expander("Drivers involved in accidents"):
@@ -115,7 +131,7 @@ with tab1: # Search tab
                     ["Male", "Female", "Unknown"],
                 )
             with col2:
-                home_area_type_selected = st.selectbox(
+                home_area_type_selected = st.multiselect(
                     "Home area type:",
                     ["Urban", "Rural", "Unknown"],
                 )
@@ -166,8 +182,8 @@ with tab1: # Search tab
         with st.expander("Data rows and columns"):       
             start_row_selected, end_row_selected = st.select_slider(
                 "Select a range of rows:",
-                options=[i for i in range(0, 1201)],
-                value=(0, 1200))
+                options=[i for i in range(0, 10001)],
+                value=(0, 10000))
             columns_selected = st.multiselect(
                 "Choose columns:",
                 ["accident", "severity", "date", "speedLimit", "roadType", "weather", "light", "roadSurface", "accidentArea", "vehicle", "vehicleType", "make", "driver", "sex", "ageBand", "driverArea"]
@@ -226,8 +242,12 @@ with tab2: # Analyze tab
             for entry in st.session_state.results:
                 latitude = entry['accident']['latitude']
                 longitude = entry['accident']['longitude']
+                if latitude is not None and longitude is not None and not (pd.isna(latitude) or pd.isna(longitude)):
                 # Append the coordinates as a tuple to the coordinates list
-                coordinates.append((latitude, longitude))
+                    coordinates.append((latitude, longitude))
+                else:
+                # Skip this entry
+                    continue
 
             df = pd.DataFrame(coordinates, columns=['lat', 'lon'])
             st.map(df, size=2, use_container_width=False)

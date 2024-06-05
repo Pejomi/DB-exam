@@ -26,6 +26,8 @@ class Neo4jConnection:
             "CREATE INDEX FOR (accident:Accident) ON (accident.latitude)",
             "CREATE INDEX FOR (accident:Accident) ON (accident.longitude)",
             "CREATE INDEX FOR (accident:Accident) ON (accident.time)",
+            "CREATE INDEX FOR (accident:Accident) ON (accident.number_of_vehicles)",
+            "CREATE INDEX FOR (accident:Accident) ON (accident.casualties)",
 
             # Severity node
             "CREATE INDEX FOR (severity:Severity) ON (severity.level)",
