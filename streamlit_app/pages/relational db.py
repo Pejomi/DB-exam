@@ -12,114 +12,114 @@ from get_db_conn import get_db_conn
 st.set_page_config(page_title="Relational DB", page_icon="../img/logo.png")
 
 tab1, tab2, tab3 = st.tabs(["Search", "Analyze", "🔥Adminstrator"])
+cnxn = get_db_conn()
 
 def get_severity_options():
-    cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getSeverities", cnxn)
     return result["type"].tolist()
 
 def get_max_casualties():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getMaxCasualties", cnxn)
     return result["max_casualties"].tolist()
 
 def get_max_and_min_dates():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getMaxAndMinDates", cnxn)
     return result
 
 def get_hit_object_in_carriage_way_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getHitObjectInCarriageway", cnxn)
     return result["hit_object_in_carriageway"].tolist()
 
 def get_hit_object_off_carriage_way_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getHitObjectOffCarriageway", cnxn)
     return result["hit_object_off_carriageway"].tolist()
 
 def get_vehicle_manoeuvre_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getVehicleManoeuvre", cnxn)
     return result["vehicle_manoeuvre"].tolist()
 
 def get_point_of_impact_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getPointOfImpacts", cnxn)
     return result["point_of_impact"].tolist()
 
 def get_sex_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getSex", cnxn)
     return result["sex"].tolist()
 
 def get_age_bands_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getAgeBands", cnxn)
     return result["band"].tolist()
 
 def get_area_types_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getAreaTypes", cnxn)
     return result["type"].tolist()
 
 def get_vehicle_make_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getVehicleMake", cnxn)
     return result["make"].tolist()
 
 def get_vehicle_model_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getVehicleModel", cnxn)
     return result["model"].tolist()
 
 def get_vehicle_type_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getVehicleType", cnxn)
     return result["type"].tolist()
 
 def get_vehicle_model_year_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getVehicleModelYear", cnxn)
     return result["model_year"].tolist()
 
 def get_weather_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getWeather", cnxn)
     return result["weather"].tolist()
 
 def get_road_type_options():    
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getRoadTypes", cnxn)
     return result["road_type"].tolist()
 
 def get_speed_limit_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getSpeedLimits", cnxn)
     return result["speed_limit"].tolist()
 
 def get_light_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getLights", cnxn)
     return result["light"].tolist()
 
 def get_road_surface_options():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getRoadSurfaces", cnxn)
     return result["road_surface"].tolist()
 
 def count_rows():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.countRows", cnxn)
     return result["count"].tolist()
 
 def get_all_columns():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getAllColumns", cnxn)
     return result.columns.tolist()
 
 def get_all_data():
-    cnxn = get_db_conn()
+    #cnxn = get_db_conn()
     result = pd.read_sql("EXECUTE dbo.getAllData", cnxn)
     return result
 
@@ -160,7 +160,7 @@ def search():
 
     try:
         start_time= time.time()
-        cnxn = get_db_conn()
+        #cnxn = get_db_conn()
         cursor = cnxn.cursor()
         result = pd.read_sql(query, cnxn, params=(tuple(values)))
         end_time = time.time()
