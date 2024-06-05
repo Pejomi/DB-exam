@@ -7,6 +7,9 @@ from neo4j import GraphDatabase
 
 st.set_page_config(page_title="Graph DB", page_icon="../img/logo.png")
 
+if 'results' not in st.session_state:
+    st.session_state.results = []
+
 tab1, tab2, tab3 = st.tabs(["Search", "Analyze", "🔥Adminstrator"])
 
 def search(tx, params):
@@ -116,7 +119,7 @@ with tab1: # Search tab
                     "Home area type:",
                     ["Urban", "Rural", "Unknown"],
                 )
-            age_bands_selected = st.multiselect("Age bands:", ["0-17", "18-25", "26-35", "36-45", "46-55", "56-65", "66-75", "76-85", "86+"])     
+            age_bands_selected = st.multiselect("Age bands:", ["0 - 5", "6 - 10", "11 - 15", "16 - 20", "21 - 25", "26 - 35", "36 - 45", "46 - 55", "56 - 65", "66 - 75", "Over 75", "No data"])    
         
         with st.expander("Vehicles involved in accidents"):  
             col1, col2 = st.columns(2)
@@ -199,6 +202,7 @@ with tab1: # Search tab
         execution_time = end_time - start_time
         row_count = len(result)
         if result:
+            st.session_state.results = result
             with st.expander(f"✅ Result ({row_count})", expanded=True):
                 st.write(f"Executed in: {execution_time:.2f}s")
                 df = pd.DataFrame(result)
@@ -217,8 +221,16 @@ with tab2: # Analyze tab
         st.bar_chart(chart_data)
     with st.expander("Locations", expanded=True):
         st.info("Click on the points to see information about the accident.")
-        df = pd.DataFrame(np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4], columns=['lat', 'lon'])
-        st.map(df, size=2, use_container_width=False)
+        if st.session_state.results:
+            coordinates = []
+            for entry in st.session_state.results:
+                latitude = entry['accident']['latitude']
+                longitude = entry['accident']['longitude']
+                # Append the coordinates as a tuple to the coordinates list
+                coordinates.append((latitude, longitude))
+
+            df = pd.DataFrame(coordinates, columns=['lat', 'lon'])
+            st.map(df, size=2, use_container_width=False)
    
 with tab3: # Monitoring tab
     st.write("Monitoring")
