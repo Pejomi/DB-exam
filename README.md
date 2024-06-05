@@ -75,7 +75,7 @@ The relational database is implemented using MSSQL. The database is designed to 
 
 Below is a diagram of the relational database design:
 
-![alt text](img/sql-database-diagram.png)
+![alt text](img/image.png)
 
 ### Graph database
 The graph database is implemented using Neo4j. The database is designed to store the relationships between the different entities in the traffic accident data set.
