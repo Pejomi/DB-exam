@@ -13,136 +13,114 @@ st.set_page_config(page_title="Relational DB", page_icon="../img/logo.png")
 
 tab1, tab2, tab3 = st.tabs(["Search", "Analyze", "🔥Adminstrator"])
 
-def get_severitiy_options():
+def get_severity_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_severities] BEGIN TRY SELECT DISTINCT type FROM dbo.Severities ORDER BY type ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_severities] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getSeverities", cnxn)
     return result["type"].tolist()
 
 def get_max_casualties():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_max_casualties] BEGIN TRY SELECT MAX(number_of_casualties) AS max_casualties FROM dbo.Accidents END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_max_casualties] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getMaxCasualties", cnxn)
     return result["max_casualties"].tolist()
 
 def get_max_and_min_dates():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_max_and_min_dates] BEGIN TRY SELECT MIN(date) AS min_date, MAX(date) AS max_date FROM dbo.Accidents END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_max_and_min_dates] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getMaxAndMinDates", cnxn)
     return result
 
 def get_hit_object_in_carriage_way_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_hit_object_in_carriage_way] BEGIN TRY SELECT DISTINCT hit_object_in_carriageway FROM dbo.Collisions ORDER BY hit_object_in_carriageway ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_hit_object_in_carriage_way] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getHitObjectInCarriageway", cnxn)
     return result["hit_object_in_carriageway"].tolist()
 
 def get_hit_object_off_carriage_way_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_hit_object_off_carriage_way] BEGIN TRY SELECT DISTINCT hit_object_off_carriageway FROM dbo.Collisions ORDER BY hit_object_off_carriageway ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_hit_object_off_carriage_way] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getHitObjectOffCarriageway", cnxn)
     return result["hit_object_off_carriageway"].tolist()
 
 def get_vehicle_manoeuvre_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_vehicle_manoeuvre] BEGIN TRY SELECT DISTINCT vehicle_manoeuvre FROM dbo.Collisions ORDER BY vehicle_manoeuvre ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_vehicle_manoeuvre] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getVehicleManoeuvre", cnxn)
     return result["vehicle_manoeuvre"].tolist()
 
 def get_point_of_impact_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_point_of_impact] BEGIN TRY SELECT DISTINCT point_of_impact FROM dbo.Collisions ORDER BY point_of_impact ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_point_of_impact] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getPointOfImpacts", cnxn)
     return result["point_of_impact"].tolist()
 
 def get_sex_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_sex] BEGIN TRY SELECT DISTINCT sex FROM dbo.Drivers ORDER by sex ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_sex] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getSex", cnxn)
     return result["sex"].tolist()
 
 def get_age_bands_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_age_bands] BEGIN TRY SELECT DISTINCT band FROM dbo.AgeBands ORDER BY band ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_age_bands] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getAgeBands", cnxn)
     return result["band"].tolist()
 
 def get_area_types_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_area_types] BEGIN TRY SELECT DISTINCT type FROM dbo.AreaTypes ORDER BY type ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_area_types] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getAreaTypes", cnxn)
     return result["type"].tolist()
 
 def get_vehicle_make_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_vehicle_make] BEGIN TRY SELECT DISTINCT make FROM dbo.Vehicles ORDER BY make ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_vehicle_make] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getVehicleMake", cnxn)
     return result["make"].tolist()
 
 def get_vehicle_model_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_vehicle_model] BEGIN TRY SELECT DISTINCT model FROM dbo.Vehicles ORDER BY model ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_vehicle_model] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getVehicleModel", cnxn)
     return result["model"].tolist()
 
 def get_vehicle_type_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_vehicle_type] BEGIN TRY SELECT DISTINCT type FROM dbo.Vehicles ORDER BY type ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_vehicle_type] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getVehicleType", cnxn)
     return result["type"].tolist()
 
 def get_vehicle_model_year_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_vehicle_model_year] BEGIN TRY SELECT DISTINCT model_year FROM dbo.Vehicles ORDER BY model_year ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_vehicle_model_year] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getVehicleModelYear", cnxn)
     return result["model_year"].tolist()
 
 def get_weather_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_weather] BEGIN TRY SELECT DISTINCT weather FROM dbo.EnvironmentConditions ORDER BY weather ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_weather] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getWeather", cnxn)
     return result["weather"].tolist()
 
 def get_road_type_options():    
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_road_type] BEGIN TRY SELECT DISTINCT road_type FROM dbo.EnvironmentConditions ORDER BY road_type ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_road_type] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getRoadTypes", cnxn)
     return result["road_type"].tolist()
 
 def get_speed_limit_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_speed_limit] BEGIN TRY SELECT DISTINCT speed_limit FROM dbo.EnvironmentConditions ORDER BY speed_limit ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_speed_limit] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getSpeedLimits", cnxn)
     return result["speed_limit"].tolist()
 
 def get_light_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_light] BEGIN TRY SELECT DISTINCT light FROM dbo.EnvironmentConditions ORDER BY light ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_light] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getLights", cnxn)
     return result["light"].tolist()
 
 def get_road_surface_options():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_road_surface] BEGIN TRY SELECT DISTINCT road_surface FROM dbo.EnvironmentConditions ORDER BY road_surface ASC END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_road_surface] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getRoadSurfaces", cnxn)
     return result["road_surface"].tolist()
 
 def count_rows():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [count_rows] BEGIN TRY SELECT COUNT(*) AS count FROM dbo.ViewAll END TRY BEGIN CATCH ROLLBACK TRANSACTION [count_rows] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.countRows", cnxn)
     return result["count"].tolist()
 
 def get_all_columns():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_all_columns] BEGIN TRY SELECT TOP(1) * FROM dbo.ViewAll END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_all_columns] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getAllColumns", cnxn)
     return result.columns.tolist()
 
 def get_all_data():
     cnxn = get_db_conn()
-    cursor = cnxn.cursor()
-    result = pd.read_sql("BEGIN TRANSACTION [get_all_data] BEGIN TRY SELECT * FROM dbo.ViewAll END TRY BEGIN CATCH ROLLBACK TRANSACTION [get_all_data] END CATCH", cnxn)
+    result = pd.read_sql("EXECUTE dbo.getAllData", cnxn)
     return result
 
 def search():
@@ -233,7 +211,7 @@ with tab1: # Search tab
             with col1:
                 severity_selected = st.multiselect(
                     "Severity:",
-                    get_severitiy_options()
+                    get_severity_options()
                 )
             with col2:
                 start_casualties_selected, end_casualties_selected = st.select_slider(
@@ -384,7 +362,7 @@ with tab3: # Monitoring tab
     # Display chat statistics
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric(label="Severities", value=len(get_severitiy_options()))
+        st.metric(label="Severities", value=len(get_severity_options()))
     with col2:
         st.metric(label="Total Chats", value=10)
     with col3:
